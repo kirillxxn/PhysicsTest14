@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Question from '../Question/Question'
 import { questions } from '../../data/questions'
 import type { TestState } from '../../types/test'
@@ -16,6 +16,28 @@ const TestComponent: React.FC = () => {
 	})
 
 	const [showAnswers, setShowAnswers] = useState<boolean>(false)
+	const testContainerRef = useRef<HTMLDivElement>(null)
+	
+	const scrollToTop = () => {
+		if (testContainerRef.current) {
+			testContainerRef.current.scrollIntoView({ 
+				behavior: 'smooth', 
+				block: 'start' 
+			})
+		} else {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+	}
+
+	useEffect(() => {
+		scrollToTop()
+	}, [testState.currentQuestion])
+
+	useEffect(() => {
+		if (testState.showResults) {
+			scrollToTop()
+		}
+	}, [testState.showResults])
 
 	useEffect(() => {
 		if (!testState.showResults) {
@@ -30,7 +52,6 @@ const TestComponent: React.FC = () => {
 	}, [testState.showResults])
 
 	const getOptionLabel = (value: number, question: any): string => {
-		// Для старых вопросов с физическими величинами
 		if (question.physicalQuantities) {
 			const physicalOptions = [
 				{ label: 'увеличивается', value: 1 },
@@ -361,7 +382,7 @@ const TestComponent: React.FC = () => {
 		const percentage = Math.round((correct / total) * 100)
 
 		return (
-			<div className={styles.results}>
+			<div className={styles.results} ref={testContainerRef}>
 				<h2>Результаты теста</h2>
 				<div className={styles.resultStats}>
 					<div className={styles.resultItem}>
@@ -514,12 +535,12 @@ const TestComponent: React.FC = () => {
 			: testState.currentQuestion + 1
 
 	return (
-		<div className={styles.testContainer}>
+		<div className={styles.testContainer} ref={testContainerRef}>
 			<div className={styles.header}>
 				<h1>
 					{testState.mode === 'mistakes'
 						? 'Работа над ошибками'
-						: 'Тест по физике'}
+						: 'Тест по физике 14'}
 					{testState.mode === 'mistakes' && (
 						<span className={styles.mistakesBadge}>
 							{testState.mistakeQuestions.length} вопросов
