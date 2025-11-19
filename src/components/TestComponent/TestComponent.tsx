@@ -17,12 +17,12 @@ const TestComponent: React.FC = () => {
 
 	const [showAnswers, setShowAnswers] = useState<boolean>(false)
 	const testContainerRef = useRef<HTMLDivElement>(null)
-	
+
 	const scrollToTop = () => {
 		if (testContainerRef.current) {
-			testContainerRef.current.scrollIntoView({ 
-				behavior: 'smooth', 
-				block: 'start' 
+			testContainerRef.current.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
 			})
 		} else {
 			window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -61,7 +61,6 @@ const TestComponent: React.FC = () => {
 			const physicalOption = physicalOptions.find(opt => opt.value === value)
 			return physicalOption?.label || ''
 		}
-
 		const statementOption = question.options.find(
 			(opt: any) => opt.value === value
 		)
